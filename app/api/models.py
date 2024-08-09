@@ -10,12 +10,11 @@ class PercentageSplitRequest(BaseModel):
     percentages: Dict[str, float]
 
 class ShareSplitRequest(BaseModel):
-    amount: float
+    amount:float
     shares: Dict[str, int]
 
 class SplitRequest(BaseModel):
     type: str  # Could be "equal", "percentage", or "share"
-    amount: float
     data: Union[EqualSplitRequest, PercentageSplitRequest, ShareSplitRequest]
 
 class SplitResponse(BaseModel):

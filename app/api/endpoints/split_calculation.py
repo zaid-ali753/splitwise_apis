@@ -1,19 +1,25 @@
 from fastapi import APIRouter, HTTPException
-from app.api.models import SplitRequest, SplitResponse, EqualSplitRequest, PercentageSplitRequest, ShareSplitRequest
+from app.api.models import EqualSplitRequest,PercentageSplitRequest,ShareSplitRequest, SplitResponse, SplitRequest
 from app.api.utils import calculate_equal_split, calculate_percentage_split, calculate_share_split
 
 router = APIRouter()
 
 @router.post("/calculate", response_model=SplitResponse)
-async def calculate_splits(request: SplitRequest):
+def calculate_splits(request: SplitRequest):
     if request.type == "equal":
-        data = EqualSplitRequest(amount=request.amount, people=request.data.people)
-        return calculate_equal_split(data)
+        if not isinstance(request.data, EqualSplitRequest):
+            raise HTTPException(status_code=400, detail="Invalid data format for equal split")
+        return calculate_equal_split(request.data)
+    
     elif request.type == "percentage":
-        data = PercentageSplitRequest(amount=request.amount, percentages=request.data.percentages)
-        return calculate_percentage_split(data)
+        if not isinstance(request.data, PercentageSplitRequest):
+            raise HTTPException(status_code=400, detail="Invalid data format for percentage split")
+        return calculate_percentage_split(request.data)
+    
     elif request.type == "share":
-        data = ShareSplitRequest(amount=request.amount, shares=request.data.shares)
-        return calculate_share_split(data)
+        if not isinstance(request.data, ShareSplitRequest):
+            raise HTTPException(status_code=400, detail="Invalid data format for share split")
+        return calculate_share_split(request.data)
+    
     else:
         raise HTTPException(status_code=400, detail="Invalid split type")
