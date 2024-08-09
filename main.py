@@ -1,15 +1,13 @@
-from typing import Union
-
 from fastapi import FastAPI
+from app.api.endpoints.users import router as users_router
+from app.api.endpoints.groups import router as groups_router
+from app.api.endpoints.expenses import router as expenses_router
+from app.api.endpoints.splits import router as splits_router
 
 app = FastAPI()
 
-
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+# Include the routers
+app.include_router(users_router, prefix="/users", tags=["users"])
+app.include_router(groups_router, prefix="/groups", tags=["groups"])
+app.include_router(expenses_router, prefix="/expenses", tags=["expenses"])
+app.include_router(splits_router, prefix="/splits", tags=["splits"])
