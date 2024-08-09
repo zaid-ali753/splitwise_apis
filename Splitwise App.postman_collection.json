@@ -1,0 +1,450 @@
+{
+	"info": {
+		"_postman_id": "6904939d-7111-40b8-a26a-412825d68ef2",
+		"name": "Splitwise App",
+		"description": "StartFragment## Features  \n  \n\\- **Calculate Splits**: Calculate equal, percentage, or share-based splits.  \n\\- **Settle Amount**: Record settlement of amounts between users.  \n\\- **Fetch Amounts**: Retrieve amounts borrowed and lent by a user.EndFragment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37572205"
+	},
+	"item": [
+		{
+			"name": "Splitwise Transaction",
+			"item": [
+				{
+					"name": "Equal Split API",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n           \"type\": \"equal\",\r\n           \"transaction_type\": \"group\",\r\n           \"group_name\":\"BBQ\",\r\n           \"data\": {\r\n             \"amount\": 40250,\r\n             \"people\": [\"Alice Johnson\", \"Mia Adams\",\"Bob Smith\",\"Leo Robinson\"],\r\n             \"paid_by\":\"Leo Robinson\"\r\n           }\r\n         }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/splitwise/calculate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"splitwise",
+								"calculate"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8000/splits/calculate\" \\\r\n     -H \"Content-Type: application/json\" \\\r\n     -d '{\r\n           \"type\": \"equal\",\r\n           \"amount\": 100,\r\n           \"data\": {\r\n             \"amount\": 100,\r\n             \"people\": [\"Alice\", \"Bob\", \"Charlie\"]\r\n           }\r\n         }'\r\n"
+					},
+					"response": [
+						{
+							"name": "Equal Split Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"equal\",\r\n    \"transaction_type\": \"group\",\r\n    \"group_name\": \"BBQ\",\r\n    \"data\": {\r\n        \"amount\": 4058,\r\n        \"people\": [\r\n            \"Alice Johnson\",\r\n            \"Mia Adams\",\r\n            \"Leo Robinson\"\r\n        ],\r\n        \"paid_by\": \"Leo Robinson\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/splitwise/calculate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"splitwise",
+										"calculate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "date",
+									"value": "Fri, 09 Aug 2024 19:09:33 GMT"
+								},
+								{
+									"key": "server",
+									"value": "uvicorn"
+								},
+								{
+									"key": "content-length",
+									"value": "176"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"splits\": {\n        \"Alice Johnson\": 1352.6666666666667,\n        \"Mia Adams\": 1352.6666666666667,\n        \"Leo Robinson\": 1352.6666666666667\n    },\n    \"paid_by\": \"Leo Robinson\",\n    \"total_amount_lent\": 2705.3333333333335\n}"
+						}
+					]
+				},
+				{
+					"name": "Percentage Split",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n           \"type\": \"percentage\",\r\n           \"data\": {\r\n             \"amount\": 10120,\r\n             \"percentages\": {\r\n               \"Alice\": 50,\r\n               \"Bob\": 30,\r\n               \"Charlie\": 20\r\n             },\r\n             \"paid_by\":\"Alice\"\r\n           }\r\n         }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/splitwise/calculate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"splitwise",
+								"calculate"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8000/splits/calculate\" \\\r\n     -H \"Content-Type: application/json\" \\\r\n     -d '{\r\n           \"type\": \"percentage\",\r\n           \"amount\": 100,\r\n           \"data\": {\r\n             \"amount\": 100,\r\n             \"percentages\": {\r\n               \"Alice\": 50,\r\n               \"Bob\": 30,\r\n               \"Charlie\": 20\r\n             }\r\n           }\r\n         }'\r\n"
+					},
+					"response": [
+						{
+							"name": "Percentage Split Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"percentage\",\r\n    \"transaction_type\": \"group\",\r\n    \"group_name\": \"NightOut\",\r\n    \"data\": {\r\n        \"amount\": 10120,\r\n        \"percentages\": {\r\n            \" Alice Johnson\": 10,\r\n            \"Mia Adams\": 30,\r\n            \"Bob Smith\": 20,\r\n            \"Leo Robinson\": 40\r\n        },\r\n        \"paid_by\": \"Mia Adams\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/splitwise/calculate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"splitwise",
+										"calculate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "date",
+									"value": "Fri, 09 Aug 2024 18:39:52 GMT"
+								},
+								{
+									"key": "server",
+									"value": "uvicorn"
+								},
+								{
+									"key": "content-length",
+									"value": "145"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"splits\": {\n        \" Alice Johnson\": 1012,\n        \"Mia Adams\": 3036,\n        \"Bob Smith\": 2024,\n        \"Leo Robinson\": 4048\n    },\n    \"paid_by\": \"Mia Adams\",\n    \"total_amount_lent\": 7084\n}"
+						}
+					]
+				},
+				{
+					"name": "Share Split",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n           \"type\": \"share\",\r\n           \"data\": {\r\n             \"amount\": 1000,\r\n             \"shares\": {\r\n               \"Alice\": 2,\r\n               \"Bob\": 1,\r\n               \"Charlie\": 1\r\n             },\r\n             \"paid_by\":\"Charlie\"\r\n           }\r\n         }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/splitwise/calculate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"splitwise",
+								"calculate"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST \"http://localhost:8000/splits/calculate\" \\\r\n     -H \"Content-Type: application/json\" \\\r\n     -d '{\r\n           \"type\": \"share\",\r\n           \"amount\": 100,\r\n           \"data\": {\r\n             \"amount\": 100,\r\n             \"shares\": {\r\n               \"Alice\": 2,\r\n               \"Bob\": 1,\r\n               \"Charlie\": 1\r\n             }\r\n           }\r\n         }'\r\n"
+					},
+					"response": [
+						{
+							"name": "Share Split Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\": \"share\",\r\n    \"transaction_type\": \"group\",\r\n    \"group_name\": \"NightOut\",\r\n    \"data\": {\r\n        \"amount\": 10450,\r\n        \"shares\": {\r\n            \" Alice Johnson\": 2,\r\n            \"Mia Adams\": 3,\r\n            \"Bob Smith\": 2,\r\n            \"Leo Robinson\": 3\r\n        },\r\n        \"paid_by\": \"Bob Smith\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8000/splitwise/calculate",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"splitwise",
+										"calculate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "date",
+									"value": "Fri, 09 Aug 2024 18:38:57 GMT"
+								},
+								{
+									"key": "server",
+									"value": "uvicorn"
+								},
+								{
+									"key": "content-length",
+									"value": "145"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"splits\": {\n        \" Alice Johnson\": 2090,\n        \"Mia Adams\": 3135,\n        \"Bob Smith\": 2090,\n        \"Leo Robinson\": 3135\n    },\n    \"paid_by\": \"Bob Smith\",\n    \"total_amount_lent\": 8360\n}"
+						}
+					]
+				}
+			],
+			"description": "StartFragment**Endpoint:** `/splitwise/calculate`  \n**Method:** `POST`  \n**Description:**  \nCalculate the splits for a transaction. This endpoint supports three types of splits: equal, percentage, and share. Based on the type of split, it calculates the amounts each participant owes or is owed.\n\n**Endpoint:** `/splitwise/amounts/{user_name}`  \n**Method:** `GET`  \n**Description:**  \nFetch the total borrowed amount and total lended amount for a specified user. This helps in determining how much a user owes and how much they have lent.\n\n**Path Parameter:**\n\n- `user_name` (string): The name of the user for whom the amounts are being fetched.\n    \n\n##### Settle Amount\n\n**Endpoint:** `/splitwise/settle`  \n**Method:** `POST`  \n**Description:**  \nRecord a settlement of an amount between users. This updates the transaction details and ledger with the settled amount."
+		},
+		{
+			"name": "Fetch Amounts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/amounts/JohnDoe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"amounts",
+						"JohnDoe"
+					]
+				},
+				"description": "Generated from cURL: curl -X GET \"http://localhost:8000/amounts/JohnDoe\""
+			},
+			"response": [
+				{
+					"name": "Fetch Amounts Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/splitwise/amounts/Mia Adams",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"splitwise",
+								"amounts",
+								"Mia Adams"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 09 Aug 2024 18:10:42 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "50"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"borrowed_amount\": 3135,\n    \"amount_lended\": 57953\n}"
+				}
+			]
+		},
+		{
+			"name": "Settlement API",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"transaction_id\": \"txn123\",\r\n  \"user_id\": \"user456\",\r\n  \"group_id\": \"group789\",\r\n  \"settled_amount\": 150.00,\r\n  \"settled_by\": \"John Doe\",\r\n  \"settled_to\": \"Jane Smith\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/splitwise/settle",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"splitwise",
+						"settle"
+					]
+				},
+				"description": "Generated from cURL: curl -X POST \"http://localhost:8000/splitwise/settle\" \\\r\n-H \"Content-Type: application/json\" \\\r\n-d '{\r\n  \"transaction_id\": \"txn123\",\r\n  \"user_id\": \"user456\",\r\n  \"group_id\": \"group789\",\r\n  \"settled_amount\": 150.00,\r\n  \"settled_by\": \"John Doe\",\r\n  \"settled_to\": \"Jane Smith\"\r\n}'\r\n"
+			},
+			"response": [
+				{
+					"name": "Settlement API Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transaction_id\": \"5736442b-bc48-4a10-9424-5cfcf75785af\",\r\n    \"lender_user_id\": \"c1e6f2f0-0c3e-4bfa-b769-2d8e4d5c1b99\",\r\n    //   \"group_id\": \"group789\", optional\r\n    \"settled_amount\": 3135.00,\r\n    \"settled_by\": \"Leo Robinson\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/splitwise/settle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"splitwise",
+								"settle"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Fri, 09 Aug 2024 19:02:31 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "60"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"success\",\n    \"message\": \"Amount settled successfully\"\n}"
+				}
+			]
+		}
+	]
+}
