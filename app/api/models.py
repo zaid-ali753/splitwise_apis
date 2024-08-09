@@ -29,3 +29,13 @@ class SplitResponse(BaseModel):
     paid_by: str
     total_amount_lent: float
 
+class AmountsResponse(BaseModel):
+    borrowed_amount: float
+    amount_lended: float
+    
+class SettleRequest(BaseModel):
+    transaction_id: str
+    lender_user_id: str
+    group_id: Optional[str] = None
+    settled_amount: float
+    settled_by: str

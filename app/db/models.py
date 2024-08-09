@@ -45,3 +45,17 @@ class User(Base):
 
     def __repr__(self):
         return f"<User(user_id={self.user_id}, name='{self.name}', created_at={self.created_at})>"
+    
+
+class Ledger(Base):
+    __tablename__ = 'ledger'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=func.gen_random_uuid())
+    transaction_id = Column(String(255), nullable=False)
+    user_id = Column(String(255), nullable=False)
+    group_id = Column(String(255), nullable=True)
+    settled_amount = Column(Numeric(10, 2), nullable=False)
+    settled_by = Column(String(255), nullable=False)
+    settled_to = Column(String(255), nullable=False)
+    settled_at = Column(TIMESTAMP, server_default=func.current_timestamp())
+    updated_at = Column(TIMESTAMP, server_default=func.current_timestamp(), onupdate=func.current_timestamp())

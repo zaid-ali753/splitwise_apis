@@ -12,3 +12,5 @@ Base = declarative_base()
 def init_db():
     from app.db.models import Group, TransactionDetails  # Import your models here
     Base.metadata.create_all(bind=engine)
+
+
