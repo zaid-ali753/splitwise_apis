@@ -11,4 +11,4 @@ def create_user(user: UserCreate):
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: int):
     # Logic to retrieve user by ID
-    return {"user_id": user_id, "username": "johndoe"}
+     return {"user_id": user_id, "username": "johndoe", "email": "johndoe@example.com"}
