@@ -1,5 +1,7 @@
 from pydantic import BaseModel
-from typing import List, Dict, Union
+from typing import List, Dict, Union , Optional
+from sqlalchemy import Column, Integer, String
+from app.db.database import Base
 
 class EqualSplitRequest(BaseModel):
     amount: float
@@ -18,8 +20,12 @@ class ShareSplitRequest(BaseModel):
 
 class SplitRequest(BaseModel):
     type: str  # Could be "equal", "percentage", or "share"
+    transaction_type: str
+    group_name:str
     data: Union[EqualSplitRequest, PercentageSplitRequest, ShareSplitRequest]
 
 class SplitResponse(BaseModel):
     splits: Dict[str, float]
     paid_by: str
+    total_amount_lent: float
+
