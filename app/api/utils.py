@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from app.api.models import EqualSplitRequest, PercentageSplitRequest, ShareSplitRequest, SplitResponse
 from typing import Tuple
-from typing import List, Dict, Union , Optional
+from typing import Dict , Optional
 def calculate_equal_split(data: EqualSplitRequest) -> Tuple[SplitResponse, float, Optional[Dict[str, float]]]:
     if len(data.people) == 0:
         raise HTTPException(status_code=400, detail="No people provided for equal split")

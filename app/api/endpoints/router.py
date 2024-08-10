@@ -5,6 +5,8 @@ from app.db.database import SessionLocal
 from app.db.models import TransactionDetails, User, Group, Ledger  # Import the TransactionDetails model
 from app.api.models import EqualSplitRequest, PercentageSplitRequest, ShareSplitRequest, SplitResponse, SplitRequest, AmountsResponse, SettleRequest
 from app.api.utils import calculate_equal_split, calculate_percentage_split, calculate_share_split
+from app.db.query_executor import get_total_borrowed, get_total_lended, update_amount_due_on, update_due_balance, create_ledger_entry
+
 router = APIRouter()
 
 def get_db():
@@ -70,82 +72,53 @@ def calculate_splits(request: SplitRequest, db: Session = Depends(get_db)):
 
 @router.get("/amounts/{user_name}", response_model=AmountsResponse)
 def get_amounts(user_name: str, db: Session = Depends(get_db)):
-    
     user = db.query(User).filter(User.name == user_name).first()
     if not user:
         raise HTTPException(status_code=404, detail=f"User {user_name} not found")
     user_id = user.user_id
-    
-    query = text("""
-        SELECT SUM((amount_due_on->>:user_name)::numeric) AS amount_due
-        FROM transaction_details
-        WHERE amount_due_on ? :user_name
-    """)
-    total_borrowed = db.execute(query, {"user_name": user_name}).fetchone()
-    
-    query_lended = text("""
-        SELECT SUM(due_balance) AS total_lended
-        FROM transaction_details
-        WHERE user_id = user_id
-    """)
-    total_lended = db.execute(query_lended, {"user_id": user_id}).fetchone()
-    
+
+    total_borrowed = get_total_borrowed(db, user_name)
+    total_lended = get_total_lended(db, user_id)
+
     if total_borrowed is None or total_lended is None:
         raise HTTPException(status_code=404, detail="Amounts not found")
-    
+
     return AmountsResponse(
-        borrowed_amount=total_borrowed[0],
-        amount_lended=total_lended[0]
+        borrowed_amount=total_borrowed,
+        amount_lended=total_lended
     )
-    
     
 @router.post("/settle", response_model=dict)
 def settle_amount(request: SettleRequest, db: Session = Depends(get_db)):
-    # Fetch lender user by ID
     lender_user = db.query(User).filter(User.user_id == request.lender_user_id).first()
     if not lender_user:
         raise HTTPException(status_code=404, detail=f"User with ID {request.lender_user_id} not found")
 
-    # Fetch settled_by user by name
     settled_by_user = db.query(User).filter(User.name == request.settled_by).first()
     if not settled_by_user:
         raise HTTPException(status_code=404, detail=f"User with name {request.settled_by} not found")
 
-    # Create a new ledger entry
-    new_ledger_entry = Ledger(
+    create_ledger_entry(
+        db,
         transaction_id=request.transaction_id,
-        user_id=request.lender_user_id,  # Lender's user ID
+        lender_user_id=request.lender_user_id,
         group_id=request.group_id,
         settled_amount=request.settled_amount,
-        settled_by=settled_by_user.user_id,  # Settled by user ID
-        settled_to=lender_user.user_id  # Settled to user ID
+        settled_by_user_id=settled_by_user.user_id
+    )
+
+    update_amount_due_on(
+        db,
+        transaction_id=request.transaction_id,
+        settled_by_key=request.settled_by
     )
     
-    db.add(new_ledger_entry)
-
-    # Update the JSONB column and due_balance
-    query = text("""
-            UPDATE transaction_details
-            SET amount_due_on = amount_due_on - :settled_by_key
-            WHERE id = :transaction_id
-    """)
-    query_due_balance_update = text(""" UPDATE transaction_details
-        SET due_balance = due_balance - :settled_amount
-        WHERE
-         transaction_details.id = :transaction_id;""")
+    update_due_balance(
+        db,
+        transaction_id=request.transaction_id,
+        settled_amount=request.settled_amount
+    )
     
-    db.execute(query, {
-        "transaction_id": request.transaction_id,
-        "settled_by_key": request.settled_by
-    })
-
-    db.execute(query_due_balance_update, {
-        "settled_amount": request.settled_amount,
-        "transaction_id": request.transaction_id
-    }) 
-    # Commit changes to the ledger and transaction_details
     db.commit()
 
-    # Check if any rows were updated
-    
     return {"status": "success", "message": "Amount settled successfully"}

@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 from typing import List, Dict, Union , Optional
-from sqlalchemy import Column, Integer, String
-from app.db.database import Base
 
 class EqualSplitRequest(BaseModel):
     amount: float
