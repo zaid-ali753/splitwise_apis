@@ -60,7 +60,7 @@ This FastAPI application provides APIs to manage transactions, calculate splits,
 1. **Run the Application**
 
     ```bash
-    uvicorn main:app --reload
+    fastapi dev main.py
     ```
 
     The application will be available at `http://localhost:8000`.
