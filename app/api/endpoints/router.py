@@ -22,9 +22,9 @@ def calculate_splits(request: SplitRequest, db: Session = Depends(get_db)):
         return db.query(User).filter(User.name == name).first()
 
     if request.data.paid_by:
-        user_name = request.data.paid_by  # Assuming a single user name
+        user_name = request.data.paid_by 
         user = user_exists(user_name)
-        print(user)
+
         if not user:
             raise HTTPException(status_code=404, detail=f"User {request.data.paid_by} not found")
         user_id = user.user_id
